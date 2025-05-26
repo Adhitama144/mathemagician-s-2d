@@ -450,7 +450,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Paused
+  m_text: Game Pause
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 65fea1d61e9196d4ab4dc621a49777aa, type: 2}
   m_sharedMaterial: {fileID: 8482495853020314065, guid: 65fea1d61e9196d4ab4dc621a49777aa, type: 2}
