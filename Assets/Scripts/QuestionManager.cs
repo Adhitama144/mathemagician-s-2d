@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class QuestionManager : MonoBehaviour
 {
@@ -37,6 +38,27 @@ public class QuestionManager : MonoBehaviour
             Debug.LogError("Enemies array is empty or not assigned.");
         }
     }
+
+ public void ShowInputField()
+{
+    if (answerInput != null)
+    {
+        answerInput.gameObject.SetActive(true);
+        answerInput.text = "";
+
+        StartCoroutine(FocusInput());
+    }
+}
+
+private IEnumerator FocusInput()
+{
+    yield return null;
+    Debug.Log("Focusing input field...");
+    answerInput.Select();
+    answerInput.ActivateInputField();
+}
+
+
 
     void CheckAllEnemiesDead()
     {
