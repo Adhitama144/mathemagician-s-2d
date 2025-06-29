@@ -7,7 +7,15 @@ public class LevelMenuController : MonoBehaviour
         SceneManager.LoadScene("Main Menu", LoadSceneMode.Single);
     }
 
-    public void Level1(){
+    public void Reset()
+    {
+        Progress progress = new Progress();
+        progress.ResetProgress();   
+        SceneManager.LoadScene("Main Menu", LoadSceneMode.Single);
+    }
+
+    public void Level1()
+    {
         SceneManager.LoadScene("Level-1", LoadSceneMode.Single);
     }
 
@@ -30,17 +38,4 @@ public class LevelMenuController : MonoBehaviour
     public void Level6(){
         SceneManager.LoadScene("Level-6", LoadSceneMode.Single);
     }
-    
-    public void Level7(){
-        SceneManager.LoadScene("Level-7", LoadSceneMode.Single);
-    }
-
-    public void Level8(){
-        SceneManager.LoadScene("Level-8", LoadSceneMode.Single);
-    }
-
-    public void Level9(){
-        SceneManager.LoadScene("Level-9", LoadSceneMode.Single);
-    }
-    
 }

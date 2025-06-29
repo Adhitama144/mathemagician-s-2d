@@ -75,7 +75,15 @@ private IEnumerator FocusInput()
 
         if (allEnemiesDead)
         {
-            SceneManager.LoadScene("Win", LoadSceneMode.Single);
+            Progress progress = new Progress();
+            string sceneName = SceneManager.GetActiveScene().name;
+            string[] parts = sceneName.Split('-');
+            int levelNumber = 1;
+
+            if (parts.Length > 1) int.TryParse(parts[1], out levelNumber);
+
+            progress.SimpanProgress(levelNumber + 1);
+            SceneManager.LoadScene("Win", LoadSceneMode.Additive);
         }
     }
 }

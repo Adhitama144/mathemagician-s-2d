@@ -6,38 +6,41 @@ public class PlayerMovement : MonoBehaviour
     float moveSpeed = 5f;
     bool isFacingRight = true;
     float jumpPower = 7.5f;
-    bool isJumping = false;
 
-    float mobileInputX = 0f; // Tambahan untuk tombol kanan/kiri mobile
+    float mobileInputX = 0f;
+    bool mobileJumpPressed = false;
 
     Rigidbody2D rb;
     Animator animator;
 
+    [SerializeField] Transform groundCheck; // Empty object di bawah kaki
+    [SerializeField] float groundCheckRadius = 0.2f;
+    [SerializeField] LayerMask groundLayer;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>(); // Inisialisasi Animator
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        // Gabungkan input keyboard dan tombol mobile
+        // Gabungkan input keyboard dan mobile
         float inputX = Input.GetAxis("Horizontal") + mobileInputX;
-        horizontalInput = Mathf.Clamp(inputX, -1f, 1f); // Hindari lebih dari 1
+        horizontalInput = Mathf.Clamp(inputX, -1f, 1f);
 
         FlipSprite();
 
-        if ((Input.GetButtonDown("Jump") || mobileJumpPressed) && !isJumping)
+        if ((Input.GetButtonDown("Jump") || mobileJumpPressed) && IsGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
-            isJumping = true;
-            mobileJumpPressed = false; // Reset flag lompat
+            mobileJumpPressed = false; // Reset hanya setelah lompat sukses
         }
 
         // Ganti animasi
         if (Input.GetKeyDown(KeyCode.X))
         {
-            animator.SetInteger("state", 2);
+            animator.SetInteger("state", 2); // animasi attack misalnya
         }
         else if (Mathf.Abs(horizontalInput) > 0.1f)
         {
@@ -65,30 +68,22 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    bool IsGrounded()
     {
-        isJumping = false;
+        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 
-    // ---------------- Tambahan Fungsi untuk Tombol UI Mobile ----------------
+    // ---------------- UI Mobile ----------------
 
     public void MoveRight(bool isPressed)
     {
-        if (isPressed)
-            mobileInputX = 1f;
-        else if (mobileInputX == 1f)
-            mobileInputX = 0f;
+        mobileInputX = isPressed ? 1f : 0f;
     }
 
     public void MoveLeft(bool isPressed)
     {
-        if (isPressed)
-            mobileInputX = -1f;
-        else if (mobileInputX == -1f)
-            mobileInputX = 0f;
+        mobileInputX = isPressed ? -1f : 0f;
     }
-
-    private bool mobileJumpPressed = false;
 
     public void MobileJump()
     {

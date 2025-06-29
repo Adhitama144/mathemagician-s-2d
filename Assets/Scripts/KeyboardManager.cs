@@ -9,6 +9,6 @@ public class KeyboardManager : MonoBehaviour
     // Fungsi untuk membuka keyboard virtual
     public void OpenKeyboard()
     {
-        keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);
+        keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default, false, false, true);
     }
 }
