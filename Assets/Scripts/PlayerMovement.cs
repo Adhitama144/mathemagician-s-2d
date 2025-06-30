@@ -2,18 +2,24 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    // Movement
     float horizontalInput;
     float moveSpeed = 5f;
     bool isFacingRight = true;
     float jumpPower = 7.5f;
 
+    // Mobile Input
     float mobileInputX = 0f;
-    bool mobileJumpPressed = false;
 
+    // Jump buffer
+    bool jumpRequested = false;
+
+    // Components
     Rigidbody2D rb;
     Animator animator;
 
-    [SerializeField] Transform groundCheck; // Empty object di bawah kaki
+    // Ground Check
+    [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius = 0.2f;
     [SerializeField] LayerMask groundLayer;
 
@@ -25,36 +31,45 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Gabungkan input keyboard dan mobile
+        // Combine keyboard + mobile input
         float inputX = Input.GetAxis("Horizontal") + mobileInputX;
         horizontalInput = Mathf.Clamp(inputX, -1f, 1f);
 
+        // Flip sprite
         FlipSprite();
 
-        if ((Input.GetButtonDown("Jump") || mobileJumpPressed) && IsGrounded())
+        // Check for jump input (keyboard)
+        if (Input.GetButtonDown("Jump"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
-            mobileJumpPressed = false; // Reset hanya setelah lompat sukses
+            jumpRequested = true;
         }
 
-        // Ganti animasi
+        // Animations
         if (Input.GetKeyDown(KeyCode.X))
         {
-            animator.SetInteger("state", 2); // animasi attack misalnya
+            animator.SetInteger("state", 2);
         }
         else if (Mathf.Abs(horizontalInput) > 0.1f)
         {
-            animator.SetInteger("state", 1); // jalan
+            animator.SetInteger("state", 1);
         }
         else
         {
-            animator.SetInteger("state", 0); // idle
+            animator.SetInteger("state", 0);
         }
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
+        // Horizontal movement
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
+
+        // Jump execution
+        if (jumpRequested && IsGrounded())
+        {
+            rb.velocity = new Vector2(horizontalInput * moveSpeed, jumpPower);
+            jumpRequested = false;
+        }
     }
 
     void FlipSprite()
@@ -73,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 
-    // ---------------- UI Mobile ----------------
+    // ---------- UI Mobile ----------
 
     public void MoveRight(bool isPressed)
     {
@@ -87,6 +102,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void MobileJump()
     {
-        mobileJumpPressed = true;
+        jumpRequested = true;
     }
 }

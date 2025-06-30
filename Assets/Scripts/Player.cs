@@ -1,37 +1,39 @@
-using TMPro;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class Player : MonoBehaviour
 {
-    public int health = 3;
-    public int maxHealth = 3;
-    
-    public TextMeshProUGUI healthText;
+    public int health = 100;
+    public int maxHealth = 100;
+
+    public event Action<int, int> OnHealthChanged;
 
     void Start()
     {
-        UpdateHealthDisplay();
+        NotifyHealthChange();
     }
 
     public void TakeDamage(int damage)
     {
         health -= damage;
-        if (health <= 0) {
+        if (health <= 0)
+        {
             health = 0;
             SceneManager.LoadScene("Death", LoadSceneMode.Additive);
-        };
-        UpdateHealthDisplay();
+        }
+        NotifyHealthChange();
     }
 
     public void Heal(int amount)
     {
         health += amount;
         if (health > maxHealth) health = maxHealth;
-        UpdateHealthDisplay();
+        NotifyHealthChange();
     }
 
-    void UpdateHealthDisplay()
+    void NotifyHealthChange()
     {
-        healthText.text = "Health: " + health + "/" + maxHealth;
+        OnHealthChanged?.Invoke(health, maxHealth);
     }
 }

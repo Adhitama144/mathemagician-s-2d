@@ -7,8 +7,10 @@ public class Enemy : MonoBehaviour
     public int health = 1;
     public TextMeshProUGUI questionText;
     public GameObject questionPanel;
-    public string question = "2 + 2 = ";
-    public string correctAnswer = "4";
+    public string question = "";
+    public string correctAnswer = "";
+
+    public RandomQuestion randomQuestion;
 
     private Player playerScript;
     public bool isInteracting = false;
@@ -17,6 +19,17 @@ public class Enemy : MonoBehaviour
     {
         playerScript = GameObject.FindObjectOfType<Player>();
         questionPanel.SetActive(false);
+
+        if (randomQuestion != null)
+        {
+            var qa = randomQuestion.GetRandomQuestionAndAnswer();
+            question = qa.question;
+            correctAnswer = qa.answer;
+        }
+        else
+        {
+            Debug.LogError("RandomQuestion reference not set on Enemy!");
+        }
     }
 
     public void AttackPlayer()
@@ -40,7 +53,10 @@ public class Enemy : MonoBehaviour
 
     public void AnswerQuestion(string playerAnswer)
     {
-        if (playerAnswer == correctAnswer)
+        string cleanPlayer = playerAnswer.Trim().ToLower().Replace("cm", "").Trim();
+        string cleanCorrect = correctAnswer.Trim().ToLower().Replace("cm", "").Trim();
+
+        if (cleanPlayer == cleanCorrect)
         {
             SceneManager.LoadScene("Killing", LoadSceneMode.Additive);
             Destroy(gameObject);

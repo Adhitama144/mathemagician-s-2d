@@ -7,6 +7,12 @@ public class QuestionManager : MonoBehaviour
 {
     public Enemy[] enemies;
     public TMP_InputField answerInput;
+    private Player playerScript;
+
+    public void Start()
+    {
+        playerScript = GameObject.FindObjectOfType<Player>();
+    }
 
     public void OnSubmitAnswer()
     {
@@ -62,6 +68,9 @@ private IEnumerator FocusInput()
 
     void CheckAllEnemiesDead()
     {
+        if (playerScript.health <= 0)
+        { return; }
+        
         bool allEnemiesDead = true;
 
         foreach (var enemy in enemies)
